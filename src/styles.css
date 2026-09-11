@@ -1,0 +1,1261 @@
+:root {
+  /* ユーザーがテーマカラーで変更する 4 色（既定値。JS が localStorage の値で上書きする） */
+  --bg: #f2f3f5;
+  --card: #ffffff;
+  --text: #1c1f23;
+  --primary: #2563eb;
+
+  /* 上の 4 色から自動計算する色。テーマを変えても違和感が出ないように追従させる */
+  --border: color-mix(in srgb, var(--text) 12%, var(--card));
+  --hairline: color-mix(in srgb, var(--text) 6%, var(--card));
+  --muted: color-mix(in srgb, var(--text) 45%, var(--card));
+  --primary-soft: color-mix(in srgb, var(--primary) 14%, var(--card));
+
+  /* 意味を持つ色は固定（削除=赤、個人情報の注意=オレンジ）。テーマの対象外 */
+  --danger: #dc2626;
+  --danger-border: #f0c9c9;
+  --note-bg: #fff7ed;
+  --note-border: #fddcb8;
+  --note-text: #9a3412;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", Meiryo, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 4px 16px 88px; /* 下端はタブバーぶんの余白 */
+}
+
+/* ---- header ---- */
+.screen-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 56px;
+  padding: 10px 2px;
+}
+
+.screen-header h1 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-left: -8px;
+  border: none;
+  background: none;
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.screen-intro {
+  margin: 0 4px 12px;
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+.icon {
+  display: block;
+}
+
+/* ---- card / grouped list ---- */
+.menu-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.menu-card + .menu-card {
+  margin-top: 16px;
+}
+
+/* ---- screen 1: category menu ---- */
+.menu-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 14px;
+  border: none;
+  border-top: 1px solid var(--hairline);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-row:first-child {
+  border-top: none;
+}
+
+.menu-row:hover {
+  background: color-mix(in srgb, var(--text) 4%, var(--card));
+}
+
+.menu-row-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.menu-row-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.menu-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.menu-row-count {
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.chevron {
+  display: inline-flex;
+  color: #c2c6cd;
+}
+
+/* ---- tags ---- */
+.tag {
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.tag-personal {
+  background: var(--note-bg);
+  color: var(--note-text);
+}
+
+.toggle-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.toggle-chip {
+  padding: 5px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.toggle-chip.on {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ---- presets screen ---- */
+.preset-rename {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+
+.preset-name-form {
+  margin-top: 8px;
+}
+
+.preset-rename .primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.preset-rename input {
+  flex: 1;
+  min-width: 150px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font: inherit;
+}
+
+.preset-rename button {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--card);
+  font: inherit;
+  cursor: pointer;
+}
+
+.preset-rename .primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---- screen 2: list head ---- */
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--text) 3%, var(--card));
+}
+
+.list-head-count {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.create-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 7px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---- screen 2: entry rows ---- */
+.entry-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  padding-right: 12px;
+  border-top: 1px solid var(--hairline);
+}
+
+.entry-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 8px 12px 14px;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.entry-row-main:hover {
+  background: color-mix(in srgb, var(--text) 4%, var(--card));
+}
+
+.entry-row-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.entry-row-body {
+  overflow: hidden;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  align-self: center;
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border: 1px solid var(--danger-border);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--danger);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.empty {
+  margin: 0;
+  padding: 20px 14px;
+  border-top: 1px solid var(--hairline);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ---- screen 2: form ---- */
+.form {
+  padding: 16px 14px;
+}
+
+.form h2 {
+  margin: 0 0 14px;
+  font-size: 0.95rem;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.form label span {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+}
+
+.form input:focus,
+.form textarea:focus {
+  outline: 2px solid var(--primary-soft);
+  border-color: var(--primary);
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.form-actions button {
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  font: inherit;
+  cursor: pointer;
+}
+
+.form-actions .primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.personal-note {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--note-border);
+  border-radius: 10px;
+  background: var(--note-bg);
+  color: var(--note-text);
+  font-size: 0.8rem;
+}
+
+.error {
+  margin: 0 0 12px;
+  color: var(--danger);
+  font-size: 0.82rem;
+}
+
+.app-footer {
+  margin-top: 28px;
+  padding: 0 4px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ---- compose screen ---- */
+.apply-bar {
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  overflow: hidden;
+}
+
+.apply-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.apply-summary-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.apply-summary-toggle {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  color: var(--primary);
+}
+
+.apply-panel {
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--hairline);
+}
+
+.preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset-chip {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.preset-chip.active {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.chip-add {
+  padding: 6px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--primary);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.apply-hint {
+  margin: 10px 0 0;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.preset-kinds-label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.preset-slot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.compose-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 1 行に収まる要素（挨拶・梱包方法など）のコンパクト行 */
+.compose-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.compose-row-label {
+  flex-shrink: 0;
+  max-width: 42%;
+  overflow: hidden;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compose-row-select {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.compose-row-select:disabled {
+  background: color-mix(in srgb, var(--text) 6%, var(--card));
+  color: var(--muted);
+}
+
+.compose-row-empty {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.8rem;
+  color: var(--primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 交換内容など、複数行の入力を持つカード */
+.compose-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.compose-item-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.compose-item-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.compose-select,
+.compose-item input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+}
+
+.compose-select:focus,
+.compose-item input[type="text"]:focus {
+  outline: 2px solid var(--primary-soft);
+  border-color: var(--primary);
+}
+
+.compose-select:disabled,
+.compose-item input[type="text"]:disabled {
+  background: color-mix(in srgb, var(--text) 6%, var(--card));
+  color: var(--muted);
+}
+
+.compose-hint {
+  margin: 8px 0 0;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* ---- 交換内容 ---- */
+.ex-field {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ex-field > span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.linklike {
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.ex-format {
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+.ex-format label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ex-format label:last-child {
+  margin-bottom: 0;
+}
+
+.ex-format span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.ex-format input,
+.ex-format textarea {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  resize: vertical;
+}
+
+/* ---- suggest dropdown ---- */
+.suggest {
+  position: relative;
+}
+
+.suggest > textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  resize: vertical;
+}
+
+.suggest > textarea:focus {
+  outline: 2px solid var(--primary-soft);
+  border-color: var(--primary);
+}
+
+.suggest > textarea:disabled {
+  background: color-mix(in srgb, var(--text) 6%, var(--card));
+  color: var(--muted);
+}
+
+.suggest-list {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 7px;
+}
+
+.suggest-item.pinned {
+  background: var(--primary-soft);
+}
+
+.suggest-value {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 8px;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.suggest-act {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.suggest-act.on {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ---- switch ---- */
+/* label.switch で .form label（同じ詳細度）より確実に勝たせる。
+   .form 内（プリセット編集など）でトグルが display:block になり
+   ずれてしまうのを防ぐため */
+label.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.switch input:disabled {
+  cursor: default;
+}
+
+.switch .switch-track {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  border-radius: 999px;
+  background: #cfd4da;
+  transition: background 0.15s;
+}
+
+.switch .switch-track::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff; /* スイッチのつまみ。トラック色に対して固定で高コントラストを保つ */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s;
+}
+
+.switch input:checked + .switch-track {
+  background: var(--primary);
+}
+
+.switch input:checked + .switch-track::before {
+  transform: translateX(16px);
+}
+
+.switch input:disabled + .switch-track {
+  opacity: 0.45;
+}
+
+.switch input:focus-visible + .switch-track {
+  outline: 2px solid var(--primary-soft);
+  outline-offset: 1px;
+}
+
+/* ---- preview ---- */
+.preview-card {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.preview-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.copy-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 7px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.copy-btn:disabled {
+  background: #b8c0cc;
+  cursor: default;
+}
+
+.ghost-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.preview-body {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text) 3%, var(--card));
+  font-family: inherit;
+  font-size: 0.88rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.preview-empty {
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text) 3%, var(--card));
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+/* ---- data (backup) screen ---- */
+.data-card {
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.data-card h2 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+
+.data-desc {
+  margin: 0 0 12px;
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+.data-card button {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  font: inherit;
+  cursor: pointer;
+}
+
+.data-card button.primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.data-result {
+  margin: 12px 0 0;
+  color: var(--primary);
+  font-size: 0.82rem;
+}
+
+/* ---- 定型文 screen ---- */
+.quick-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.quick-check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.quick-select-hint {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.combine-card {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--primary);
+  border-radius: 12px;
+  background: var(--primary-soft);
+}
+
+.combine-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.combine-connector {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.combine-connector span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.combine-connector input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--card);
+}
+
+.combine-card .preview-body {
+  margin-bottom: 10px;
+}
+
+.combine-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.quick-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quick-card {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.quick-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.quick-title {
+  flex: 1;
+  min-width: 0;
+  padding: 2px 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.quick-body {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.quick-delete-link {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: var(--danger);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+/* ---- theme screen ---- */
+.theme-card {
+  padding: 14px;
+}
+
+.theme-card + .theme-card {
+  margin-top: 14px;
+}
+
+.theme-card h2 {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+.theme-preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.theme-preset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  color: inherit;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.theme-preset-swatch {
+  display: flex;
+}
+
+.theme-preset-swatch span {
+  width: 14px;
+  height: 14px;
+  margin-left: -6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 50%;
+}
+
+.theme-preset-swatch span:first-child {
+  margin-left: 0;
+}
+
+.theme-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.theme-field:first-of-type {
+  border-top: none;
+}
+
+.theme-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.theme-field-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.theme-field-hint {
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.theme-field-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.theme-field-input input[type="color"] {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+
+.theme-hex {
+  width: 88px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.theme-reset {
+  display: block;
+  margin: 14px auto 0;
+}
+
+/* ---- confirm modal ---- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.modal {
+  width: 100%;
+  max-width: 340px;
+  padding: 18px 16px 14px;
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+.modal-message {
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  font: inherit;
+  cursor: pointer;
+}
+
+.modal-actions .primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.modal-actions .danger-solid {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---- bottom tab bar ---- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tabbar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 7px 6px 8px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+.tabbar-item.active {
+  color: var(--primary);
+}
